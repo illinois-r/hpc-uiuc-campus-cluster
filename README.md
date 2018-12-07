@@ -25,4 +25,6 @@ Contained within this repository are:
 - PBS Code Templates: **[pbs-templates/](pbs-templates/)**
     - Sample Default Templates [pbs-templates/default/](pbs-templates/default/)
         - Found on ICC at `/projects/consult/pbs`
+    - STAT 385 Example R & PBS Files [pbs-templates/stat385-examples/](pbs-templates/stat385-examples/)
+        - Correspond to PBS files in [Illinois Campus Cluster (ICC)](slides/05-03-2018-stat385-using-icc.pdf) slides.
 - Custom Bash Files: **[bash-scripts/](bash-scripts/)**

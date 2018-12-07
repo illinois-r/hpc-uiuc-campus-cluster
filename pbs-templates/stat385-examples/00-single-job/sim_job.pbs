@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+## Set the maximum amount of runtime to 4 Hours
+#PBS -l walltime=04:00:00
+## Request one node with `nodes` and one core with `ppn`
+#PBS -l nodes=1:ppn=1
+#PBS -l naccesspolicy=shared
+## Name the job
+#PBS -N jobname
+## Queue in the secondary queue
+#PBS -q secondary
+## Merge standard output into error output
+#PBS -j oe
+#####################################
+
+## Create a directory for the data output based ## on PBS_JOBID
+mkdir ${PBS_O_WORKDIR}/${PBS_JOBID}
+## Switch directory into job ID (puts all output here)
+cd ${PBS_O_WORKDIR}/${PBS_JOBID} # Load R
+
+module load R
+## Run R script in batch mode without file output
+Rscript $HOME/sim_runner.R --args 5 10

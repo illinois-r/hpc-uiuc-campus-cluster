@@ -1,0 +1,104 @@
+#!/bin/bash
+################################################################
+##                                                            ##
+##                    Campus Cluster                          ##
+##           Sample Job Array Job Batch Script                ##
+##                                                            ##
+## PBS Options                                                ##
+##                                                            ##
+##  option -l                                                 ##
+##    walltime: maximum wall clock time (hh:mm:ss)            ##
+##       nodes: number of 12-core(taub) nodes                 ##
+##                        16-core(golub) nodes                ##
+##                        20-core(golub) nodes                ##
+##         ppn: cores per node to use (1 thru 12) on taub     ##
+##                                    (1 thru 16) on golub    ##
+##                                    (1 thru 20) on golub    ##
+##                                                            ##
+##  option -N                                                 ##
+##    job name (default = name of script file)                ##
+##                                                            ##
+##  option -q                                                 ##
+##    queue name ( -q name_of_queue )                         ##
+##                                                            ##
+##  option -t                                                 ##
+##     array_request                                          ##
+##     The array_request argument is an integer id or a       ##
+##     range of integers. Multiple ids or id ranges can be    ##
+##     combined in a comma delimited list.                    ##
+##     ( -t 1-100        specifies a 100-job, job array       ##
+##       -t 1,10,51-100  specifies a 52-job, job array with   ##
+##                       task ids 1,10,51-100                 ##
+##       -t 1-100%5      specifies a 100-job, job array with  ##
+##                       a slot limit of 5 (only 5 jobs from  ##
+##                       this array can run concurrently)     ##
+##                                                            ##
+##  option -o                                                 ##
+##     filename for standard output at end of job             ##
+##     (default = <job_name>.o<job_id>).  File is written to  ##
+##     directory from which qsub was executed. Remove extra   ##
+##     "##" from the PBS -o line if you want to name your     ##
+##     own file.                                              ##
+##                                                            ##
+##  option -e                                                 ##
+##     filename for standard error at end of job              ##
+##     (default = <job_name>.e<job_id>).  File is written to  ##
+##     directory from which qsub was executed. Remove extra   ##
+##     "##" from the PBS -e line if you want to name your     ##
+##     own file.                                              ##
+##                                                            ##
+##  option -j                                                 ##
+##     Join the standard output and standard error streams    ##
+##     of the job                                             ##
+##     ( -j oe  merges stderr with stdout and generates a     ##
+##              stdout file <job_name>.o<job_id>              ##
+##       -j eo  merges stdout with stderr and generates a     ##
+##              stderr file <job_name>.e<job_id>  )           ##
+##                                                            ##
+##  option -m                                                 ##
+##     mail_options (email notifications)                     ##
+##     The mail_options argument is a string which consists   ##
+##     of either the single character "n", or one or more of  ##
+##     the characters "a", "b", and "e".                      ##
+##     ( -m a   Send mail when the job is aborted.            ##
+##       -m be  Send mail when the job begins execution and   ##
+##              when the job terminates.                      ##
+##       -m n   Do not send mail.  )                          ##
+##                                                            ##
+################################################################
+#
+# This batch script runs a job array with 4 jobs beginning with
+# array index "1".  The environment variable PBS_ARRAYID
+# is set to the value of the array index for each job in the
+# job array.  Four identical jobs are run: JobID[1] through
+# JobID[4].  Each job passes its own input file (input_data1
+# through input_data4) to a.out.
+#
+#PBS -l walltime=00:30:00
+#PBS -l nodes=1:ppn=12
+#PBS -N myjobarray
+#PBS -q secondary
+#PBS -t 1-4
+#PBS -j oe
+###PBS -o jobarray.out
+###PBS -e jobarray.err
+###PBS -m be
+#
+#####################################
+
+# Assigned the numeric portion of the pbs jobid to a varaible
+export JOBID=`echo "$PBS_JOBID" | cut -d"." -f1`
+
+# Create a unique directory using the numeric portion of
+# the pbs jobid
+mkdir $PBS_O_WORKDIR/"$JOBID"
+
+# Change to the unique directory based on the pbs jobid
+cd $PBS_O_WORKDIR/"$JOBID"
+
+# Run the code using a specific numbered input data.
+# The index number of the job array is used to identify
+# the specific input data.  In this example each job
+# of the job array would use the assosciated input file
+# (input_data1, input_date2, input_data3 or input_data4).
+$HOME/a.out < $HOME/input_data${PBS_ARRAYID}

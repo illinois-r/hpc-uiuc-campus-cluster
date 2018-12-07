@@ -20,4 +20,6 @@ Contained within this repository are:
     - STAT 385 ICC Slides
     - Brownbag Slides for Statistical Computing on Campus Cluster
 - PBS Code Templates: **[pbs-templates/](pbs-templates/)**
+    - Default Templates **[pbs-templates/default/](pbs-templates/default/)**
+        - Found on ICC at: `/projects/consult/pbs`
 - Custom Bash Files: **[bash-scripts/](bash-scripts/)**
